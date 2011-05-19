@@ -201,6 +201,9 @@ namespace dk.nita.saml20.protocol
             }
 
             Saml20AuthnRequest authnRequest = Saml20AuthnRequest.GetDefault();
+            // VALTECH: Publish AssertionConsumerServiceURL which is missing in DK framework. Reguired by Logica idp.
+            // TODO: Lite av ett fulhack då vi tar url:en från den befintliga requesten vilket i och för sig vore normalt men denna kanske man borde ha i config istället.
+            authnRequest.Request.AssertionConsumerServiceURL = context.Request.Url.ToString();
             TransferClient(idpEndpoint, authnRequest, context);            
         }
 
@@ -421,8 +424,10 @@ namespace dk.nita.saml20.protocol
             {
                 quirksMode = endp.QuirksMode;
             }
-            
-            Saml20Assertion assertion = new Saml20Assertion(elem, null, quirksMode);
+
+            //VALTECH: 2011-05-19: Changed constructor to one using default assertion profile
+            //ORIGINAL: Saml20Assertion assertion = new Saml20Assertion(elem, null, quirksMode);
+            Saml20Assertion assertion = new Saml20Assertion(elem, null, AssertionProfile.Core, quirksMode);
                         
             if (endp == null || endp.metadata == null)
             {
@@ -571,6 +576,7 @@ namespace dk.nita.saml20.protocol
             if (idpEndpoint.IsPassive)
                 request.IsPassive = true;
 
+            
             object forceAuthnFlag = context.Session[IDPForceAuthn];
 
             if (forceAuthnFlag != null && (bool)forceAuthnFlag)
