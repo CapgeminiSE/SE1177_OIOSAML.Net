@@ -107,6 +107,11 @@ namespace dk.nita.saml20.Bindings
             return XmlSignatureUtils.CheckSignature(_document);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <returns></returns>
         public bool CheckSignature(IEnumerable<KeyDescriptor> keys)
         {
             foreach (KeyDescriptor keyDescriptor in keys)
