@@ -230,6 +230,7 @@ namespace dk.nita.saml20.config
         /// </summary>
         [XmlAttribute("metadata")]        
         public string metadataLocation;
+        
 
         /// <summary>
         /// The encodings that should be attempted when a metadata file does not contain an encoding attribute and 
@@ -309,17 +310,30 @@ namespace dk.nita.saml20.config
         [XmlIgnore] 
         private Dictionary<string, string> _fileToEntity;
 
+        private string GetMetaDataDirectory()
+        {
+            if (string.IsNullOrEmpty(metadataLocation))
+                return string.Empty;
+
+            var directory = metadataLocation;
+            if (Directory.Exists(directory))
+                return directory;
+            if (HttpContext.Current != null)
+                directory = HttpContext.Current.Server.MapPath(metadataLocation);
+            if (Directory.Exists(directory))
+                return directory;
+            throw new DirectoryNotFoundException(Resources.MetadataLocationNotFoundFormat(metadataLocation));
+        }
+
         /// <summary>
         /// Refreshes the information retrieved from the directory containing metadata files.
         /// </summary>
         public void Refresh()
         {
-            if (metadataLocation == null)
+            var metaDataDirectory = GetMetaDataDirectory();
+            if (string.IsNullOrEmpty(metaDataDirectory))
                 return;
-
-            if (!Directory.Exists(metadataLocation))
-                throw new DirectoryNotFoundException(Resources.MetadataLocationNotFoundFormat(metadataLocation));
-
+            
             // Start by removing information on files that are no long in the directory.
             List<string> keys = new List<string>(_fileInfo.Keys.Count);
             keys.AddRange(_fileInfo.Keys);
@@ -337,7 +351,7 @@ namespace dk.nita.saml20.config
                 }
 
             // Detect added classes
-            string[] files = Directory.GetFiles(metadataLocation);
+            string[] files = Directory.GetFiles(metaDataDirectory);
             foreach (string file in files)
             {
                 Saml20MetadataDocument metadataDoc;
