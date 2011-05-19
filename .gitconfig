@@ -1,0 +1,12 @@
+[mergetool]
+	keepBackup = false
+[color]
+	ui = auto
+[alias]
+	st = status
+	ci = commit
+	co = checkout
+	br = branch
+[core]
+	autocrlf = true
+    safecrlf = false
