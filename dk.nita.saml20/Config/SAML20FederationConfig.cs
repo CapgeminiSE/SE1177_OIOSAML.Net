@@ -312,16 +312,19 @@ namespace dk.nita.saml20.config
 
         private string GetMetaDataDirectory()
         {
-            if (string.IsNullOrEmpty(metadataLocation))
+            var directory = metadataLocation;
+
+            if (string.IsNullOrEmpty(directory))
                 return string.Empty;
 
-            var directory = metadataLocation;
             if (Directory.Exists(directory))
                 return directory;
+
             if (HttpContext.Current != null)
                 directory = HttpContext.Current.Server.MapPath(metadataLocation);
             if (Directory.Exists(directory))
                 return directory;
+
             throw new DirectoryNotFoundException(Resources.MetadataLocationNotFoundFormat(metadataLocation));
         }
 
