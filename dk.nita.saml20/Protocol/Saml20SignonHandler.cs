@@ -202,8 +202,9 @@ namespace dk.nita.saml20.protocol
 
             Saml20AuthnRequest authnRequest = Saml20AuthnRequest.GetDefault();
             // VALTECH: Publish AssertionConsumerServiceURL which is missing in DK framework. Reguired by Logica idp.
-            // TODO: Lite av ett fulhack då vi tar url:en från den befintliga requesten vilket i och för sig vore normalt men denna kanske man borde ha i config istället.
-            authnRequest.Request.AssertionConsumerServiceURL = context.Request.Url.ToString();
+            authnRequest.Request.AssertionConsumerServiceURL = 
+                SAML20FederationConfig.GetConfig().ServiceProvider.AssertionConsumerServiceURL ?? context.Request.Url.ToString();
+
             TransferClient(idpEndpoint, authnRequest, context);            
         }
 

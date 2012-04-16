@@ -571,6 +571,19 @@ namespace dk.nita.saml20.config
             set { _server = value; }
         }
 
+        private string _assertionConsumerServiceURL;
+
+        /// <summary>
+        /// Gets or sets the AssertionConsumerServiceURL that is sent to the request to the IDP.
+        /// </summary>
+        /// <value>The URL to the AssertionConsumerServiceURL</value>
+        [XmlAttribute(AttributeName = "assertionConsumerServiceURL")]
+        public string AssertionConsumerServiceURL
+        {
+            get { return _assertionConsumerServiceURL; }
+            set { _assertionConsumerServiceURL = value; }
+        }
+
         /// <summary>
         /// List of service endpoints
         /// </summary>
@@ -633,6 +646,7 @@ namespace dk.nita.saml20.config
         /// </summary>
         [XmlElement(Namespace = Saml20Constants.METADATA)] 
         public List<Contact> ContactPerson;
+
     }
 
     /// <summary>
